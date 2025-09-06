@@ -1,7 +1,7 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 
-import "./App.css";
+// import "./App.css";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AppLayout from "./components/AppLayout";
 import Homepage from "./pages/Homepage";
@@ -33,7 +33,7 @@ function App() {
             <Route index element={<Navigate replace to="home" />} />
             <Route path="home" element={<Homepage />} />
             <Route path="history" element={<Historypage />} />
-            <Route />
+            <Route path="history/:patientId" element={<Historypage />} />
           </Route>
 
           <Route path="login" element={<LoginPage />} />
