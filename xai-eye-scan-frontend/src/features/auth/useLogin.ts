@@ -11,13 +11,14 @@ export default function useLogin() {
     mutationFn: loginApi,
     onSuccess: (userData) => {
       console.log("Logged In");
-      queryClient.setQueryData(["user"], userData.user);
+      queryClient.setQueryData(["user"], userData);
       navigate("/home", { replace: true });
     },
 
     onError: (err) => {
       console.log("Login Error: ", err);
       toast.error("Provided email or password are incorrect, please try again");
+      toast.error(err.message);
     },
   });
 

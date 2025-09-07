@@ -17,7 +17,10 @@ export async function signup({
     },
   });
 
-  if (error) throw new Error(error.message);
+  if (error) {
+    console.log(error);
+    throw new Error(error.message);
+  }
 
   return data;
 }

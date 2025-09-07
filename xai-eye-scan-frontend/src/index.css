@@ -114,6 +114,7 @@ body {
   color: #eeeeee;
   margin-left: auto;
   font-size: 1rem;
+  margin-right: 5px;
 }
 
 .login__form--redirect:hover {

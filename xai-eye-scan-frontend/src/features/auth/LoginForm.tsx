@@ -3,8 +3,8 @@ import { Link } from "react-router-dom";
 import useLogin from "./useLogin";
 
 function LoginForm() {
-  const [email, setEmail] = useState<string>();
-  const [password, setPassword] = useState<string>();
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
   const { login, isLoading } = useLogin();
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {

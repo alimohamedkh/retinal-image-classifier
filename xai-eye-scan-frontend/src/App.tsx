@@ -9,6 +9,7 @@ import Historypage from "./pages/Historypage";
 import LoginPage from "./pages/LoginPage";
 import Signuppage from "./pages/Signuppage";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import Krookypage from "./pages/Krookypage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -32,6 +33,7 @@ function App() {
           >
             <Route index element={<Navigate replace to="home" />} />
             <Route path="home" element={<Homepage />} />
+            <Route path="krooky" element={<Krookypage />} />
             <Route path="history" element={<Historypage />} />
             <Route path="history/:patientId" element={<Historypage />} />
           </Route>
