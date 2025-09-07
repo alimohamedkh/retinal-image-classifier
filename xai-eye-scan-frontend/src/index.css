@@ -4,6 +4,22 @@
   font-weight: 400;
 }
 
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: inherit;
+}
+
+a {
+  text-decoration: none;
+}
+
+html {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
   min-height: 100vh;
@@ -25,12 +41,18 @@ body {
 
 .login__title {
   text-align: center;
+  font-family: "Tinos", serif;
+  font-weight: 700;
+  font-style: italic;
+  font-size: 1.9rem;
 }
 
 .login__form {
   display: flex;
   flex-direction: column;
   gap: 1.3rem;
+  margin-top: 0.9rem;
+  font-family: "Red Hat Display", sans-serif;
 }
 
 .login__form--container {
@@ -39,11 +61,61 @@ body {
   gap: 0.5rem;
 }
 
+.login__form--label {
+  font-family: "Red Hat Display", sans-serif;
+}
+
 .login__form--input {
   padding: 0.5rem 1rem;
   border-radius: 0.3rem;
+  border: 3px solid #393e46;
 }
 
 .login__form--input:focus {
-  border: none;
+  outline: none;
+  border-color: #00adb5;
+}
+
+.login__form--buttons {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.login__form--submit,
+.login__form--redirect {
+  outline: none;
+  width: 5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: "Tinos", serif;
+  transition: all ease-in-out 0.3s;
+}
+
+.login__form--submit {
+  width: 100%;
+  padding: 0.9rem 1rem;
+  border-radius: 0.3rem;
+  border: 3px solid #393e46;
+  background-color: #00adb5;
+  color: #eeeeee;
+  font-size: 1.3rem;
+  cursor: pointer;
+}
+
+.login__form--submit:hover {
+  background-color: #26c4cc;
+}
+
+.login__form--redirect {
+  color: #eeeeee;
+  margin-left: auto;
+  font-size: 1rem;
+}
+
+.login__form--redirect:hover {
+  color: #ffffff;
 }
