@@ -1,0 +1,51 @@
+# --------------------
+# Python
+# --------------------
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg-info/
+.eggs/
+dist/
+build/
+
+# Virtual environment
+env/
+venv/
+ENV/
+*.venv
+
+# Jupyter
+.ipynb_checkpoints
+
+# --------------------
+# Environment & Secrets
+# --------------------
+.env
+*.env
+
+# --------------------
+# Logs
+# --------------------
+*.log
+logs/
+*.out
+*.err
+
+# --------------------
+# IDE & OS
+# --------------------
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+
+# --------------------
+# Docker
+# --------------------
+*.pid
+*.seed
+*.pid.lock
