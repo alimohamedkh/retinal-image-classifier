@@ -30,36 +30,38 @@ def generate_heatmap(model, img_array, target_layer_name, class_index, pred_clas
     score = predictions[0][class_index]
     scores.append(score)
 
-    scores = np.array(scores)
+  scores = np.array(scores)
 
-    # --- THIS IS THE KEY FIX ---
-    # Normalize the scores to a 0-1 range to use as weights.
-    # This makes the heatmap much more discriminative.
-    if np.max(scores) - np.min(scores) > 0:
-        scores = (scores - np.min(scores)) / (np.max(scores) - np.min(scores))
-    # -------------------------
+  # --- THIS IS THE KEY FIX ---
+  # Normalize the scores to a 0-1 range to use as weights.
+  # This makes the heatmap much more discriminative.
+  if np.max(scores) - np.min(scores) > 0:
+      scores = (scores - np.min(scores)) / (np.max(scores) - np.min(scores))
+  # -------------------------
 
-    weights = scores
+  weights = scores
 
-    weighted_activations = activations * weights.reshape((1, 1, -1))
-    cam = np.sum(weighted_activations, axis=-1)
+  weighted_activations = activations * weights.reshape((1, 1, -1))
+  cam = np.sum(weighted_activations, axis=-1)
 
-    cam = np.maximum(cam, 0)
+  cam = np.maximum(cam, 0)
 
-    # Normalize the final heatmap
-    heatmap = (cam - np.min(cam)) / (np.max(cam) - np.min(cam) + 1e-6)
+  # Normalize the final heatmap
+  heatmap = (cam - np.min(cam)) / (np.max(cam) - np.min(cam) + 1e-6)
 
-    #----------------------------------#--------------------------#-------------------------#
+  #----------------------------------#--------------------------#-------------------------#
 
-    img = np.array(raw_image.convert("RGB"))
+  img = np.array(raw_image.convert("RGB"))
 
-    heatmap = cv2.resize(heatmap, (img.shape[1], img.shape[0]))
+  heatmap = cv2.resize(heatmap, (img.shape[1], img.shape[0]))
 
-    heatmap = np.uint8(255 * heatmap)
-    heatmap = cv2.applyColorMap(heatmap, cv2.COLORMAP_JET)
+  heatmap = np.uint8(255 * heatmap)
+  heatmap = cv2.applyColorMap(heatmap, cv2.COLORMAP_JET)
 
-    superimposed_img = heatmap * 0.4 + img
-    superimposed_img = np.clip(superimposed_img, 0, 255).astype(np.uint8)
+  heatmap = cv2.cvtColor(heatmap, cv2.COLOR_BGR2RGB)
+
+  superimposed_img = heatmap * 0.4 + img
+  superimposed_img = np.clip(superimposed_img, 0, 255).astype(np.uint8)
 
 
-    return superimposed_img
+  return superimposed_img

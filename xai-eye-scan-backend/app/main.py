@@ -67,7 +67,7 @@ def predict():
         image_bytes = image_file.read()
         image = Image.open(io.BytesIO(image_bytes))
 
-        upload_image(np.array(image))
+        upload_image(np.array(image), "Scan Image")
 
         # RESIZE THE IMAGE'S DIMENSIONS
         target_size = (224, 224)
