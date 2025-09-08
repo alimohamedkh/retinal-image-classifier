@@ -124,6 +124,8 @@ body {
 .app {
   min-height: 100vh;
   min-width: 100vw;
+  position: relative;
+  background-color: #faf9f6;
 }
 
 .nav {
@@ -140,4 +142,133 @@ body {
 .nav__btn {
   width: 1.7rem;
   height: 1.7rem;
+}
+
+.sidenav {
+  position: absolute;
+  content: "";
+  top: 0;
+  left: 0;
+  width: 45%;
+  height: 100%;
+  background-color: #393e46;
+  /* background-color: #222831; */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  /* justify-content: flex-start; */
+  padding: 1rem 1.5rem;
+  box-shadow: 0 20px 60px 10px rgba(0, 0, 0, 0.2),
+    0 15px 20px -5px rgba(0, 0, 0, 0.22);
+}
+
+.sidenav__menu {
+  width: 1.7rem;
+  height: 1.7rem;
+  color: #eeeeee;
+  margin-right: auto;
+}
+
+.sidenav__btns {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  margin-top: 45%;
+}
+
+.sidenav__btn {
+  width: 100%;
+  padding: 0.9rem 2.3rem;
+  border-radius: 0.3rem;
+  border: 3px solid #393e46;
+  background-color: #00adb5;
+  color: #eeeeee;
+  font-size: 1.3rem;
+  cursor: pointer;
+  font-family: "Tinos", serif;
+  letter-spacing: 1px;
+  font-weight: 500;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.doctor {
+  height: 100%;
+  width: 100%;
+  position: relative;
+}
+
+.btns {
+  margin: 0 auto;
+  width: 85%;
+  margin-top: 5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  font-family: "Red Hat Display", sans-serif;
+}
+
+.btns__btn {
+  border: none;
+  /* font-weight: 600; */
+  font-size: larger;
+  color: #ffffff;
+  letter-spacing: 2px;
+  background-color: #00adb5;
+  box-shadow: 0 6px 12px -2px rgba(50, 50, 93, 0.25),
+    0 3px 7px -3px rgba(0, 0, 0, 0.3);
+  padding: 1rem 2.5rem;
+}
+
+.doctor__form {
+  position: absolute;
+  content: "";
+  top: 70%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #393e46;
+  color: #eeeeee;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.3rem;
+  margin-top: 0.9rem;
+  font-family: "Red Hat Display", sans-serif;
+  padding: 1.5rem 2.5rem;
+  box-shadow: 0 20px 60px 10px rgba(0, 0, 0, 0.2),
+    0 15px 20px -5px rgba(0, 0, 0, 0.22);
+}
+
+.doctor__form--container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.doctor__form--input {
+  padding: 0.5rem 1rem;
+  border-radius: 0.3rem;
+  border: 3px solid #393e46;
+}
+
+.doctor__form--input:focus {
+  outline: none;
+  border-color: #00adb5;
+}
+
+.doctor__form--btn {
+  width: 100%;
+  padding: 0.9rem 1rem;
+  border-radius: 0.3rem;
+  border: 3px solid #393e46;
+  background-color: #00adb5;
+  color: #eeeeee;
+  font-size: 1.3rem;
+  cursor: pointer;
+  font-family: "Tinos", serif;
+  letter-spacing: 1px;
 }

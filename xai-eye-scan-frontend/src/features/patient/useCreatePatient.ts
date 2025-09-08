@@ -1,14 +1,15 @@
 import { useMutation } from "@tanstack/react-query";
-import { createPatient } from "../../services/apiPatient";
-import { useNavigate } from "react-router-dom";
+import { createPatient as createPatientApi } from "../../services/apiPatient";
+import toast from "react-hot-toast";
 
 export default function useCreatePatient() {
-  const navigate = useNavigate();
-
-  useMutation({
-    mutationFn: createPatient,
-    onSuccess: (createdPatientData) => {
-      navigate(`/history/${createdPatientData.at(0).id}`);
-    },
+  const { mutate: createPatient, isPending } = useMutation({
+    mutationFn: createPatientApi,
+    onSuccess: () =>
+      toast.success(
+        "Patient has been created , please select them in order to use the prediction feature"
+      ),
   });
+
+  return { createPatient, isLoading: isPending };
 }

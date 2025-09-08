@@ -14,9 +14,36 @@ export async function createPatient({ patientName }: { patientName: string }) {
     .insert([{ Patient_Name: patientName, Doctor_id: doctorId }])
     .select();
 
-  if (error) throw new Error(error.message);
+  if (error) {
+    console.log("Error creating patient: ", error.message);
+    throw new Error(error.message);
+  }
 
   return data;
+}
+
+export async function getPatients() {
+  const { data: userData, error: userError } = await supabase.auth.getUser();
+
+  if (userError || !userData.user) {
+    throw new Error(userError?.message || "Doctor not found or not logged in");
+  }
+
+  const doctorId = userData.user.id;
+
+  const { data: patientsData, error: patientsError } = await supabase
+    .from("DoctorPatients")
+    .select("Patient_Name")
+    .eq("Doctor_id", doctorId);
+
+  if (patientsError) {
+    console.log("Error reading patients: ", patientsError.message);
+    throw new Error(patientsError.message);
+  }
+
+  console.log("Arrived Patients: ", patientsData);
+
+  return patientsData;
 }
 
 export async function checkIsPatient() {
