@@ -46,6 +46,7 @@ def user_authenticated(jwt_token: str) -> bool:
 
         # Ask Supabase to validate the token.
         user_response = client.auth.get_user(jwt_token)
+        print(user_response)
 
         # If the call succeeds and we get a user object back, they are authenticated.
         if user_response.user:
@@ -58,7 +59,7 @@ def user_authenticated(jwt_token: str) -> bool:
         print(f"An unexpected error occurred during authentication: {str(e)}")
         return False
     
-def upload_image(superimposed_img) :
+def upload_image(img, img_type) :
 
     # superimposed_img: np.ndarray (H, W, 3) RGB, uint8
 
@@ -66,13 +67,16 @@ def upload_image(superimposed_img) :
 
     # 1) Encode to PNG in-memory
     buf = io.BytesIO()
-    Image.fromarray(superimposed_img).save(buf, format="PNG")
+    Image.fromarray(img).save(buf, format="PNG")
     buf.seek(0)
     png_bytes = buf.getvalue()
 
     # 2) Choose a path/name in the bucket
     BUCKET_NAME = "Images"
-    filename = f"overlays/{uuid.uuid4().hex}.png"
+    if img_type == "heatmap":
+        filename = f"heatmaps/{uuid.uuid4().hex}.png"
+    else:
+        filename = f"scanimage/{uuid.uuid4().hex}.png"
 
     # 3) Upload
     client.storage.from_(BUCKET_NAME).upload(
@@ -84,3 +88,6 @@ def upload_image(superimposed_img) :
     url = client.storage.from_(BUCKET_NAME).get_public_url(filename)
     
     return url
+
+def update_history(jwt_token : str, DPatientID : str) :
+    return

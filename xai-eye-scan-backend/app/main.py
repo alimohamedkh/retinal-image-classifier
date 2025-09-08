@@ -1,5 +1,5 @@
 from flask import Flask
-from db import user_authenticated, upload_image
+from app.db import user_authenticated, upload_image
 from models.scorecam import generate_heatmap 
 from flask import request, jsonify
 import os
@@ -8,9 +8,11 @@ import io
 import tensorflow as tf
 from keras.applications.resnet50 import preprocess_input
 from keras.preprocessing.image import img_to_array
+from flask_cors import CORS
 from PIL import Image
 
 app = Flask(__name__)
+CORS(app)
 
 model = None
 
@@ -58,19 +60,20 @@ def predict():
 
     try:
         # Extract the Image
-        if 'image' not in request.files:
-            return jsonify({"error": "No image file provided"}), 400
+        if 'file' not in request.files:
+            return jsonify({"error": "No file provided"}), 400
         
-        image_file = request.files['image']
+        image_file = request.files['file']
         image_bytes = image_file.read()
         image = Image.open(io.BytesIO(image_bytes))
 
+        upload_image(np.array(image))
 
         # RESIZE THE IMAGE'S DIMENSIONS
         target_size = (224, 224)
         image = image.resize(target_size)
 
-        img_array = image.img_to_array(image)
+        img_array = img_to_array(image)
         img_array = np.expand_dims(img_array, axis=0)
         img_array = preprocess_input(img_array)
         
@@ -80,7 +83,9 @@ def predict():
         class_index = np.argmax(preds[0])
         pred_class_name = class_names[class_index]
 
-        heatmap_url = upload_image(generate_heatmap(model, img_array, 'conv5_block3_out', class_index, pred_class_name, image))
+        heatmap_url = upload_image(generate_heatmap(model, img_array, 'conv5_block3_out', class_index, pred_class_name, image), "heatmap")
+
+        print("predicted_class :" , pred_class_name)
 
         return jsonify({
             "predicted_class": pred_class_name,

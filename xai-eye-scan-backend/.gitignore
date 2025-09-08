@@ -49,3 +49,5 @@ Thumbs.db
 *.pid
 *.seed
 *.pid.lock
+
+models/best_acc_model_stage_2-epoch-26-val_accuracy-0.92.keras
