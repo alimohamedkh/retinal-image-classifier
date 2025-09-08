@@ -18,3 +18,28 @@ export async function createPatient({ patientName }: { patientName: string }) {
 
   return data;
 }
+
+export async function checkIsPatient() {
+  const { data: authData, error: authError } = await supabase.auth.getUser();
+  if (authError) {
+    console.log("Error from checking user: ", authError.message);
+    throw new Error(authError.message);
+  }
+
+  const userId = authData.user.id;
+
+  const { data: userData, error } = await supabase
+    .from("Patient")
+    .select("*")
+    .eq("id", userId);
+
+  if (error) {
+    console.log("Error from checking user: ", error.message);
+    throw new Error(error.message);
+  }
+
+  console.log("Result from user checking: ", userData);
+
+  if (userData.length > 0) return true;
+  else return false;
+}

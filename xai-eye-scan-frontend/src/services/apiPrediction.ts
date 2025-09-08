@@ -1,6 +1,12 @@
 import supabase from "./supabase";
 
-export async function predict({ file }: { file: File }) {
+export async function predict({
+  file,
+  Dpatient_id,
+}: {
+  file: File;
+  Dpatient_id: string | undefined;
+}) {
   // 1. Get the current session from Supabase
   const { data: sessionData, error: sessionError } =
     await supabase.auth.getSession();
@@ -20,6 +26,7 @@ export async function predict({ file }: { file: File }) {
   // 3. Use FormData to prepare the file for the request
   const formData = new FormData();
   formData.append("file", file); // 'file' is the key the server will use to find the file
+  if (Dpatient_id) formData.append("Dpatient_id", Dpatient_id);
 
   try {
     // 4. Send the POST request with the JWT and the file
