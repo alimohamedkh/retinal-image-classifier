@@ -34,7 +34,7 @@ def load_keras_model():
     except Exception as e:
         print(f"❌ Error loading Keras model: {e}")
 
-load_keras_model()
+
 
 @app.route('/')
 def index():
@@ -42,7 +42,9 @@ def index():
 
 @app.route('/predict', methods=['POST'])
 def predict():
-    
+    if model is None:
+        load_keras_model()
+        
     # Get the Authorization header from the incoming request
     auth_header = request.headers.get('Authorization')
     
