@@ -1,5 +1,5 @@
 from flask import Flask
-from app.db import user_authenticated, upload_image
+from app.db import user_authenticated, upload_image, update_history
 from models.scorecam import generate_heatmap 
 from flask import request, jsonify
 import os
@@ -86,6 +86,8 @@ def predict():
         heatmap_url = upload_image(generate_heatmap(model, img_array, 'conv5_block3_out', class_index, pred_class_name, image), "heatmap")
 
         print("predicted_class :" , pred_class_name)
+        
+        update_history(jwt_token, request.form.get("Dpatient_id"), scanimage_url, pred_class_name, heatmap_url)
 
         return jsonify({
             "predicted_class": pred_class_name,
