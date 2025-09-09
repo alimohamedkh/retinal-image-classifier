@@ -26,9 +26,9 @@ function SignupForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="login__form">
-      <div className="login__form--container">
-        <label htmlFor="email" className="login__form--label">
+    <form onSubmit={handleSubmit} className="form">
+      <div className="form__container">
+        <label htmlFor="email" className="form__label">
           Enter your email
         </label>
         <input
@@ -36,15 +36,15 @@ function SignupForm() {
           name="email"
           id="email"
           placeholder="name@example.com"
-          className="login__form--input"
+          className="form__input"
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
       </div>
 
-      <div className="login__form--container">
-        <label htmlFor="password" className="login__form--label">
+      <div className="form__container">
+        <label htmlFor="password" className="form__label">
           Enter your password
         </label>
         <input
@@ -52,15 +52,15 @@ function SignupForm() {
           name="password"
           id="password"
           placeholder=""
-          className="login__form--input"
+          className="form__input"
           required
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
       </div>
 
-      <div className="login__form--container">
-        <label htmlFor="confirmPassword" className="login__form--label">
+      <div className="form__container">
+        <label htmlFor="confirmPassword" className="form__label">
           Confirm Your Password
         </label>
         <input
@@ -68,21 +68,21 @@ function SignupForm() {
           name="confirmPassword"
           id="confirmPassword"
           placeholder=""
-          className="login__form--input"
+          className="form__input"
           required
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
         />
       </div>
 
-      <div className="login__form--container">
-        <label htmlFor="confirmPassword" className="login__form--label">
+      <div className="form__container">
+        <label htmlFor="confirmPassword" className="form__label">
           Are you a patient or a doctor ?
         </label>
         <select
           name="userType"
           id="userType"
-          className="login__form--input"
+          className="form__input"
           required
           value={userType}
           onChange={(e) => setUserType(e.target.value)}
@@ -93,19 +93,11 @@ function SignupForm() {
         </select>
       </div>
 
-      <div className="login__form--buttons">
-        <button
-          type="submit"
-          className="login__form--submit"
-          disabled={isLoading}
-        >
+      <div className="form__buttons">
+        <button type="submit" className="form__submit" disabled={isLoading}>
           Signup
         </button>
-        <Link
-          to="/login"
-          className="login__form--redirect"
-          aria-disabled={isLoading}
-        >
+        <Link to="/login" className="form__redirect" aria-disabled={isLoading}>
           Go to Login
         </Link>
       </div>

@@ -33,7 +33,7 @@ export async function getPatients() {
 
   const { data: patientsData, error: patientsError } = await supabase
     .from("DoctorPatients")
-    .select("Patient_Name")
+    .select("id, Patient_Name")
     .eq("Doctor_id", doctorId);
 
   if (patientsError) {
@@ -52,6 +52,8 @@ export async function checkIsPatient() {
     console.log("Error from checking user: ", authError.message);
     throw new Error(authError.message);
   }
+
+  console.log("Data from Authenticeated User: ", authData);
 
   const userId = authData.user.id;
 

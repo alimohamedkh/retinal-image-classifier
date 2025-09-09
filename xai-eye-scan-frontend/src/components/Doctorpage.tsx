@@ -11,6 +11,10 @@ function Doctorpage() {
     setShow(true);
   }
 
+  function handleHide() {
+    setShow(false);
+  }
+
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!patientName) return;
@@ -20,7 +24,7 @@ function Doctorpage() {
 
   return (
     <div className="doctor">
-      <div className="btns">
+      <div className="btns" style={show ? { filter: "blur(3px)" } : undefined}>
         <button className="btns__btn" onClick={handleShow}>
           Add Patient
         </button>
@@ -44,6 +48,9 @@ function Doctorpage() {
           </div>
           <button className="doctor__form--btn" disabled={isLoading}>
             Create Patient
+          </button>
+          <button className="doctor__form--cancel" onClick={handleHide}>
+            cancel
           </button>
         </form>
       )}

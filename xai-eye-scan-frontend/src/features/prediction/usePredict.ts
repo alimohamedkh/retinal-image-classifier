@@ -2,7 +2,11 @@ import { useMutation } from "@tanstack/react-query";
 import { predict as predictApi } from "../../services/apiPrediction";
 
 export default function usePredict() {
-  const { mutate: predict, isPending } = useMutation({
+  const {
+    mutate: predict,
+    isPending,
+    data,
+  } = useMutation({
     mutationFn: predictApi,
     onSuccess: (data) => {
       console.log("Prediction successful:", data);
@@ -12,5 +16,5 @@ export default function usePredict() {
     },
   });
 
-  return { predict, isLoading: isPending };
+  return { predict, isLoading: isPending, data };
 }
