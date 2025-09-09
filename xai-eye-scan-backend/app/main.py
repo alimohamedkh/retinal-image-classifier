@@ -1,8 +1,15 @@
+import os
+
+os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
+os.environ["NVIDIA_VISIBLE_DEVICES"] = "void"
+os.environ.setdefault("TF_CPP_MIN_LOG_LEVEL", "0")
+
+
+
 from flask import Flask
-from app.db import user_authenticated, upload_image
+from app.db import user_authenticated, upload_image, update_history
 from models.scorecam import generate_heatmap 
 from flask import request, jsonify
-import os
 import numpy as np
 import io
 import tensorflow as tf
@@ -34,7 +41,7 @@ def load_keras_model():
     except Exception as e:
         print(f"❌ Error loading Keras model: {e}")
 
-load_keras_model()
+
 
 @app.route('/')
 def index():
@@ -42,7 +49,9 @@ def index():
 
 @app.route('/predict', methods=['POST'])
 def predict():
-    
+    if model is None:
+        load_keras_model()
+
     # Get the Authorization header from the incoming request
     auth_header = request.headers.get('Authorization')
     
@@ -86,6 +95,8 @@ def predict():
         heatmap_url = upload_image(generate_heatmap(model, img_array, 'conv5_block3_out', class_index, pred_class_name, image), "heatmap")
 
         print("predicted_class :" , pred_class_name)
+        
+        update_history(jwt_token, request.form.get("Dpatient_id"), scanimage_url, pred_class_name, heatmap_url)
 
         return jsonify({
             "predicted_class": pred_class_name,

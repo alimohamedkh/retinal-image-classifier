@@ -89,5 +89,35 @@ def upload_image(img, img_type) :
     
     return url
 
-def update_history(jwt_token : str, DPatientID : str) :
-    return
+def update_history(jwt_token : str, Dpatient_id : str, scanimage_url : str, predicted_class : str, heatmap_url : str):
+
+    client = get_db_client()
+
+    # Update the user's history in the database
+    if(Dpatient_id is None) :
+        patient_id = client.auth.get_user(jwt_token).user.id
+        response = client.table("History").insert({
+            "Scan_image": scanimage_url,
+            "Class": predicted_class,
+            "Heatmap_image": heatmap_url,
+            "DPatient_id": None,
+            "Patient_id": patient_id,
+            
+        }).execute()
+    
+    else :
+        response = client.table("History").insert({
+            "Scan_image": scanimage_url,
+            "Class": predicted_class,
+            "Heatmap_image": heatmap_url,
+            "DPatient_id": Dpatient_id,
+            "Patient_id": None,
+            
+        }).execute()
+
+    if response.data:
+        print("Successfully inserted history record.")
+        return True
+    else:
+        print("Insert operation did not return data. Might be an issue.")
+        return False

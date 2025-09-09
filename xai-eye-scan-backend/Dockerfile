@@ -1,22 +1,29 @@
 FROM python:3.10-slim
 
-# 2. Set the working directory in the container
+# Work at project root in the container
 WORKDIR /app
 
-# 3. Copy the requirements file and install dependencies
+
+
+# Install Python deps
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# 4. Copy your application code and models into the container
-COPY ./app .
+# Copy your project (keep app/ as a folder, do NOT flatten)
+COPY ./app ./app
 COPY ./models ./models
+# (copy any other root files you need, e.g. config, .py files in root)
 
-# 5. Expose the port your app runs on
-# Gunicorn will bind to this port
-EXPOSE 8000
+ENV CUDA_VISIBLE_DEVICES=-1
+ENV NVIDIA_VISIBLE_DEVICES=void
+ENV TF_CPP_MIN_LOG_LEVEL=0
+# (optional) If you want identical numerics to non-oneDNN builds:
+# ENV TF_ENABLE_ONEDNN_OPTS=0
 
-# 6. Define the command to run your application with Gunicorn
-# "main:app" tells Gunicorn to look for a variable named "app" in a file named "main.py"
-# --bind 0.0.0.0:8000 makes the server accessible from outside the container
-# --workers 3 is a common starting point for the number of worker processes
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--workers", "3", "main:app"]
+
+# Container listens on 8080
+ENV PORT=8080
+EXPOSE 8080
+
+# Run from project root, importing Flask app at app/main.py -> app
+CMD ["gunicorn","-b", "0.0.0.0:8080","--workers", "1","--threads", "4","--timeout", "180","app.main:app"]

@@ -10,6 +10,7 @@ def generate_heatmap(model, img_array, target_layer_name, class_index, pred_clas
 
   activations = activation_model.predict(img_array)
   activations = activations[0]
+  #activations = activations[:, :, ::50]
 
   scores = []
   for i in range(activations.shape[-1]): # shape = (14, 14, 3)
