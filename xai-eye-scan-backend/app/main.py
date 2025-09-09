@@ -1,8 +1,15 @@
+import os
+
+os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
+os.environ["NVIDIA_VISIBLE_DEVICES"] = "void"
+os.environ.setdefault("TF_CPP_MIN_LOG_LEVEL", "0")
+
+
+
 from flask import Flask
 from app.db import user_authenticated, upload_image, update_history
 from models.scorecam import generate_heatmap 
 from flask import request, jsonify
-import os
 import numpy as np
 import io
 import tensorflow as tf
@@ -44,7 +51,7 @@ def index():
 def predict():
     if model is None:
         load_keras_model()
-        
+
     # Get the Authorization header from the incoming request
     auth_header = request.headers.get('Authorization')
     

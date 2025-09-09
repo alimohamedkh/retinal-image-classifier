@@ -30,7 +30,7 @@ export async function predict({
 
   try {
     // 4. Send the POST request with the JWT and the file
-    const response = await fetch("http://localhost:5000/predict", {
+    const response = await fetch("http://localhost:8080/predict", {
       // Adjusted URL
       method: "POST",
       headers: {
