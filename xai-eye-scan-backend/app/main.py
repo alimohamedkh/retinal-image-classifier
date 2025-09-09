@@ -67,7 +67,7 @@ def predict():
         image_bytes = image_file.read()
         image = Image.open(io.BytesIO(image_bytes))
 
-        upload_image(np.array(image), "Scan Image")
+        scanimage_url = upload_image(np.array(image), "Scan Image")
 
         # RESIZE THE IMAGE'S DIMENSIONS
         target_size = (224, 224)
@@ -90,6 +90,7 @@ def predict():
         return jsonify({
             "predicted_class": pred_class_name,
             "heatmap_url": heatmap_url,
+            "scanimage_url": scanimage_url
         })
 
     except Exception as e:
