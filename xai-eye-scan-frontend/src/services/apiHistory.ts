@@ -5,7 +5,9 @@ export async function getHistory({
 }: {
   dpatient_id: string | undefined;
 }) {
-  let query = supabase.from("History").select("*");
+  let query = supabase
+    .from("History")
+    .select("id, Scan_image, Class, Heatmap_image, created_at");
 
   if (dpatient_id) {
     query = query.eq("Dpatient_id", dpatient_id);
@@ -23,6 +25,8 @@ export async function getHistory({
   const { data: historyData, error: errorData } = await query;
 
   if (errorData) throw new Error(errorData.message);
+
+  console.log("Found History: ", historyData);
 
   return historyData;
 }

@@ -1,7 +1,9 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import useGetPatients from "../features/patient/useGetPatients";
 import usePredict from "../features/prediction/usePredict";
 import toast from "react-hot-toast";
+import useCheckIsPatient from "../features/patient/useCheckIsPatient";
+import Loader from "./Loader";
 
 type Prediction = {
   id: number;
@@ -10,18 +12,48 @@ type Prediction = {
   heatmapImage: string;
 };
 
-function DoctorPredict() {
-  const { patientsData, isLoading } = useGetPatients();
-  const {
-    predict,
-    isLoading: isPredicting,
-    // data: predictionResult,
-  } = usePredict();
+type PredictionFromCloud = {
+  id: string;
+  Scan_image: string;
+  Class: string;
+  Heatmap_image: string;
+  created_at: string;
+};
+
+function Predict({ history }: { history?: PredictionFromCloud[] }) {
+  const { data: isPatient, isLoading: isCheckingIsPatient } =
+    useCheckIsPatient();
+  const { patientsData, isLoading: isGettingPatients } = useGetPatients();
+  const { predict, isLoading: isPredicting } = usePredict();
   const [predictions, setPredictions] = useState<Prediction[]>([]);
-  const [patientId, setPatientId] = useState<string>();
+  const [patientId, setPatientId] = useState<string | undefined>(undefined);
   const [image, setImage] = useState<File>();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const nextId = useRef<number>(0);
+
+  useEffect(
+    function () {
+      if (history && history.length > 0) {
+        const sortedHistory = [...history].sort(
+          (a, b) =>
+            new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+        );
+
+        const initialPredictions = sortedHistory.map(
+          (item: PredictionFromCloud) => ({
+            id: nextId.current++, // Assign a new local ID and increment the counter
+            scanImage: item.Scan_image,
+            predictedClass: item.Class,
+            heatmapImage: item.Heatmap_image,
+          })
+        );
+
+        console.log("Initial Predictions: ", initialPredictions);
+        setPredictions(initialPredictions);
+      }
+    },
+    [history]
+  );
 
   function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
     if (e.target.files) setImage(e.target.files[0]);
@@ -30,62 +62,97 @@ function DoctorPredict() {
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    if (image && patientId) {
-      console.log("Predict Request Sent");
-      predict(
-        { file: image, Dpatient_id: patientId },
-        {
-          onSuccess: (res) => {
-            setPatientId("");
-            setImage(undefined);
-            setPredictions((prevPredictions) => [
-              ...prevPredictions,
-              {
-                id: nextId.current++,
-                scanImage: res.scanimage_url,
-                predictedClass: res.predicted_class,
-                heatmapImage: res.heatmap_url,
-              },
-            ]);
+    if (!isPatient)
+      if (image && patientId) {
+        console.log("Predict Request Sent By Doctor");
+        predict(
+          { file: image, Dpatient_id: patientId },
+          {
+            onSuccess: (res) => {
+              setPatientId("");
+              setImage(undefined);
+              setPredictions((prevPredictions) => [
+                ...prevPredictions,
+                {
+                  id: nextId.current++,
+                  scanImage: res.scanimage_url,
+                  predictedClass: res.predicted_class,
+                  heatmapImage: res.heatmap_url,
+                },
+              ]);
 
-            if (fileInputRef.current) fileInputRef.current.value = "";
-          },
-        }
-      );
-    } else if (!patientId) {
-      toast.error("Please select one of your patients");
-    } else {
-      toast.error("Please upload a scan to be predicted");
+              if (fileInputRef.current) fileInputRef.current.value = "";
+            },
+          }
+        );
+      } else if (patientId) {
+        toast.error("Please select one of your patients");
+      } else {
+        toast.error("Please upload a scan to be predicted");
+      }
+    else {
+      if (image) {
+        console.log("Predict Request Sent By Patient");
+        predict(
+          { file: image, Dpatient_id: patientId },
+          {
+            onSuccess: (res) => {
+              setPatientId("");
+              setImage(undefined);
+              setPredictions((prevPredictions) => [
+                ...prevPredictions,
+                {
+                  id: nextId.current++,
+                  scanImage: res.scanimage_url,
+                  predictedClass: res.predicted_class,
+                  heatmapImage: res.heatmap_url,
+                },
+              ]);
+
+              if (fileInputRef.current) fileInputRef.current.value = "";
+            },
+          }
+        );
+      } else {
+        toast.error("Please upload a scan to be predicted");
+      }
     }
   }
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isGettingPatients || isCheckingIsPatient) return <Loader />;
 
   return (
     <div className="predict">
       <div className="predict__form">
         <div className="formContainer">
           <form className="form" onSubmit={handleSubmit}>
-            <div className="form__container">
-              <label htmlFor="patient" className="form__label">
-                Please choose the patient
-              </label>
-              <select
-                name="patient"
-                id="patient"
-                value={patientId}
-                onChange={(e) => setPatientId(e.target.value)}
-                className="form__input"
-                disabled={isPredicting}
-              >
-                <option value="">Select one of the patients</option>
-                {patientsData?.map((patient) => (
-                  <option value={patient.id} key={patient.id}>
-                    {patient.Patient_Name}
-                  </option>
-                ))}
-              </select>
-            </div>
+            {isPatient && (
+              <h1 className="predict__form--title">
+                Please upload a scan to be classified
+              </h1>
+            )}
+            {!isPatient && (
+              <div className="form__container">
+                <label htmlFor="patient" className="form__label">
+                  Please choose the patient
+                </label>
+                <select
+                  name="patient"
+                  id="patient"
+                  value={patientId}
+                  onChange={(e) => setPatientId(e.target.value)}
+                  className="form__input"
+                  disabled={isPredicting}
+                >
+                  <option value="">Select one of the patients</option>
+                  {patientsData?.map((patient) => (
+                    <option value={patient.id} key={patient.id}>
+                      {patient.Patient_Name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
 
             <div className="form__container">
               <input
@@ -130,44 +197,6 @@ function DoctorPredict() {
           </form>
         </div>
       </div>
-
-      {/* {isPredicting && (
-        <div className="skeleton-container">
-          <div className="skeleton skeleton-image"></div>
-
-          <div className="skeleton skeleton-text"></div>
-          <div className="skeleton skeleton-text short"></div>
-
-          <div className="skeleton skeleton-image"></div>
-        </div>
-      )} */}
-
-      {/* <div className="predict__results">
-        <div className="">
-          <div className="skeleton skeleton-image"></div>
-
-          <div className="skeleton skeleton-text"></div>
-          <div className="skeleton skeleton-text short"></div>
-
-          <div className="skeleton skeleton-image"></div>
-        </div>
-
-        <div className="predict__result">
-          <img
-            src="https://vlzqpsknkkfwxgzqkyly.supabase.co/storage/v1/object/public/Images/scanimage/008fcbcdc5bd4f6d889cace152dc4afd.png?"
-            alt="The is the image scan to be predicted"
-            className="predict__scan"
-          />
-          <h2 className="predict__class">
-            The Diagnosis is <span>Glaucoma</span>
-          </h2>
-          <img
-            src="https://vlzqpsknkkfwxgzqkyly.supabase.co/storage/v1/object/public/Images/heatmaps/7795cf2dfeac4391975529bdfeb03022.png?"
-            alt="The is the visual proof of the explainable artificial intillegence"
-            className="predict__heatmap"
-          />
-        </div>
-      </div> */}
 
       {predictions.length > 0 && (
         <div className="predict__results">
@@ -234,7 +263,7 @@ function DoctorPredict() {
   );
 }
 
-export default DoctorPredict;
+export default Predict;
 
 // "https://vlzqpsknkkfwxgzqkyly.supabase.co/storage/v1/object/public/Images/heatmaps/7795cf2dfeac4391975529bdfeb03022.png?"
 // "https://vlzqpsknkkfwxgzqkyly.supabase.co/storage/v1/object/public/Images/scanimage/008fcbcdc5bd4f6d889cace152dc4afd.png?"

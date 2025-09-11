@@ -1,13 +1,15 @@
 import Doctorpage from "../components/Doctorpage";
-import Patientpage from "../components/Patientpage";
+import Loader from "../components/Loader";
+import Predict from "../components/Predict";
+// import Patientpage from "../components/Patientpage";
 import useCheckIsPatient from "../features/patient/useCheckIsPatient";
 
 function Homepage() {
   const { data: checkResult, isLoading } = useCheckIsPatient();
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <Loader />;
 
-  if (checkResult === true) return <Patientpage />;
+  if (checkResult === true) return <Predict />;
   else return <Doctorpage />;
 }
 

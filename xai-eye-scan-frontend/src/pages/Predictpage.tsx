@@ -1,13 +1,14 @@
-import DoctorPredict from "../components/DoctorPredict";
+import Loader from "../components/Loader";
+import Predict from "../components/Predict";
 import useCheckIsPatient from "../features/patient/useCheckIsPatient";
 
 function Predictpage() {
   const { data: checkResult, isLoading } = useCheckIsPatient();
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <Loader />;
 
-  if (checkResult === true) return <div>Patient Predict</div>;
-  else return <DoctorPredict />;
+  if (checkResult === true) return <Predict />;
+  else return <Predict />;
 }
 
 export default Predictpage;
