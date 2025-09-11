@@ -96,10 +96,26 @@ body {
   align-items: center;
 }
 
-.form__upload > .form__label {
+.form__upload--label {
   background-color: #222831;
   color: #ffffff;
   padding: 0.5rem 1rem;
+  cursor: pointer;
+  transition: all ease-in-out 0.3s;
+}
+
+.form__upload--label:hover {
+  background-color: #282c33;
+  color: #ffffff;
+}
+
+.form__label--disabled {
+  background-color: #0f1115;
+  cursor: not-allowed;
+}
+
+.form__label--disabled:hover {
+  background-color: #0f1115;
 }
 
 .form__file {
@@ -143,6 +159,15 @@ body {
   cursor: pointer;
 }
 
+.form__submit:disabled {
+  background-color: #006469;
+  cursor: not-allowed;
+}
+
+.form__submit:disabled:hover {
+  background-color: #006469;
+}
+
 .form__submit:hover {
   background-color: #26c4cc;
 }
@@ -160,14 +185,16 @@ body {
 
 .app {
   min-height: 100vh;
+  max-height: max-content;
+  display: flex;
+  flex-grow: 1;
   min-width: 100vw;
   position: relative;
   background-color: #faf9f6;
 }
 
-.nav {
+.header {
   position: fixed;
-  content: "";
   top: 0;
   left: 0;
   z-index: 50;
@@ -178,12 +205,25 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 0.5rem;
+  padding: 0.3rem 0.5rem;
 }
 
-.nav__btn {
-  width: 1.7rem;
-  height: 1.7rem;
+.header__btns {
+  display: flex;
+  gap: 0.7rem;
+}
+
+.header__btn {
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0.5rem;
+  transition: all ease-in-out 0.2s;
+  cursor: pointer;
+  border-radius: 0.3rem;
+}
+
+.header__btn:hover {
+  background-color: #353c47;
 }
 
 .sidenav {
@@ -231,12 +271,16 @@ body {
   font-family: "Tinos", serif;
   letter-spacing: 1px;
   font-weight: 500;
+  text-align: center;
 }
 
 .main {
   display: flex;
   flex-direction: column;
   align-items: center;
+  min-height: max-content;
+  max-height: max-content;
+  flex-grow: 1;
   margin-top: 5rem;
   padding: 3.5rem 1.5rem;
   position: relative;
@@ -334,34 +378,54 @@ body {
 .predict {
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
   gap: 3rem;
+  overflow: hidden;
 }
 
 .predict__form {
   position: fixed;
-  z-index: 45;
-  flex-shrink: 0;
-  top: 30%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  top: 5rem;
+  z-index: 55;
 }
 
 .predict__results {
+  position: fixed;
+  top: 45%;
   display: flex;
   flex-direction: column;
   gap: 2.5rem;
   background-color: #eeeeee;
-  position: absolute;
-  z-index: 40;
-  top: 430%;
-  left: 50%;
-  transform: translateX(-50%);
-  padding: 3rem 1rem;
+  padding: 3rem 1rem 3rem;
+  border-radius: 0.7rem;
+  margin: 3rem 0;
   width: 85%;
-  height: 500%;
   flex-grow: 1;
-  overflow-y: auto;
   scrollbar-width: none;
+  height: calc(100vh - 50%);
+  overflow-y: scroll;
+  /* box-shadow: inset 0 8px 10px -5px rgba(0, 0, 0, 0.15); */
+  z-index: 50;
+}
+
+.predict__results::before {
+  content: ""; /* Required for pseudo-elements to appear */
+  position: absolute; /* Position relative to the scroll-container */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 15px; /* The height of the shadow effect */
+
+  /* The shadow effect using a gradient */
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.15), transparent);
+
+  /* Make sure the shadow is on top of the content */
+  z-index: 49;
+
+  /* Allows mouse clicks to pass through the shadow to the content below */
+  pointer-events: none;
 }
 
 .predict__result {
@@ -369,7 +433,6 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-items: center;
   text-align: center;
   gap: 0.9rem;
 }
@@ -381,16 +444,133 @@ body {
   transform: translateY(-50%);
   border: 0.5px solid #222831;
   width: 100%;
+  opacity: 0.3;
 }
 
 .predict__scan,
 .predict__heatmap {
-  width: 70%;
+  width: 65%;
   height: auto;
+  z-index: 47;
 }
 
 .predict__class {
+  font-size: "Red Hat Display", sans-serif;
+  font-weight: 500;
+  color: #393e46;
+}
+
+.predict__class > span {
+  font-style: italic;
+  letter-spacing: 1.5px;
+  font-weight: 700;
+  font-family: "Tinos", serif;
+  color: #222831;
 }
 
 .predict__heatmap {
+}
+
+/* The main container for the skeleton loader */
+.skeleton-container {
+  align-self: center;
+  /* display: flex;
+  flex-direction: column;
+  justify-content: center; */
+  /* align-items: center; */
+  text-align: center;
+  width: 320px;
+  padding: 20px;
+  border-radius: 8px;
+  background-color: #eeeeee;
+}
+
+/* Base styles for all skeleton placeholder elements */
+.skeleton {
+  background-color: #e0e0e0;
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden; /* Crucial for the shimmer effect */
+  margin-bottom: 12px;
+}
+
+/* The shimmer animation effect */
+.skeleton::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -150px;
+  width: 100px;
+  height: 100%;
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    #ebebeb 50%,
+    transparent 100%
+  );
+  animation: shimmer 1.5s infinite;
+}
+
+/* Keyframes for the shimmer animation */
+@keyframes shimmer {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    /* Adjust the distance based on the container width for a smooth effect */
+    transform: translateX(470px);
+  }
+}
+
+/* Specific styles for the layout parts */
+.skeleton-image {
+  height: 180px; /* Height for the image placeholders */
+  margin-bottom: 16px;
+}
+
+.skeleton-text {
+  height: 16px; /* Height for each line of text */
+  width: 100%;
+  text-align: center;
+}
+
+.skeleton-text.short {
+  width: 70%; /* Make the last line of text shorter */
+  margin-bottom: 16px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.help {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 3rem;
+  text-transform: capitalize;
+}
+
+.help__title {
+  font-size: 1.7rem;
+  line-height: 1.9;
+  font-family: "Tinos", serif;
+  text-align: center;
+  color: #222831;
+}
+
+.help__steps {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1rem;
+  font-size: 1.3rem;
+}
+
+.help__step {
+  text-align: center;
+}
+
+.help__step span {
+  font-style: italic;
 }

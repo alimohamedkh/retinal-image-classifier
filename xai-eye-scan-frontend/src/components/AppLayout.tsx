@@ -12,14 +12,11 @@ function AppLayout() {
   }
 
   return (
-    <div
-      className="app"
-      // style={show ? { opacity: 0.97, filter: "blur(4px)" } : undefined}
-    >
-      <Header handleToggleShow={handleToggleShow} />
+    <div className="app">
+      <Header handleToggleShow={handleToggleShow} show={show} />
       {show && <SideDrawer handleToggleShow={handleToggleShow} />}
 
-      <div className="main">
+      <div className="main" style={show ? { filter: "blur(3px)" } : undefined}>
         <Outlet />
       </div>
     </div>
