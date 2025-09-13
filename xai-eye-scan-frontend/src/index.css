@@ -255,6 +255,26 @@ body {
   padding: 0.3rem 0.5rem;
 }
 
+.header__profile {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.header__profile--img {
+  width: 1.9rem;
+  height: 1.9rem;
+  border-radius: 100%;
+}
+
+.header__profile--name {
+  color: #eeeeee;
+  font-size: 1rem;
+  font-family: "Tinos", serif;
+  font-style: italic;
+}
+
 .header__btns {
   display: flex;
   gap: 0.7rem;

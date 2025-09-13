@@ -4,6 +4,7 @@ import { useSignup } from "./useSignup";
 import toast from "react-hot-toast";
 
 function SignupForm() {
+  const [fullName, setFullName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
@@ -20,13 +21,28 @@ function SignupForm() {
       );
 
     signup(
-      { email, password, user_type: userType },
+      { email, password, user_type: userType, full_name: fullName },
       { onSuccess: () => navigate("/login") }
     );
   }
 
   return (
     <form onSubmit={handleSubmit} className="form">
+      <div className="form__container">
+        <label htmlFor="fullName" className="form__label">
+          What is your full name
+        </label>
+        <input
+          type="fullName"
+          name="fullName"
+          id="fullName"
+          className="form__input"
+          required
+          value={fullName}
+          onChange={(e) => setFullName(e.target.value)}
+        />
+      </div>
+
       <div className="form__container">
         <label htmlFor="email" className="form__label">
           Enter your email
