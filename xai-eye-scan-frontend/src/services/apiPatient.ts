@@ -46,6 +46,29 @@ export async function getPatients() {
   return patientsData;
 }
 
+export async function getPatient({
+  patientId,
+}: {
+  patientId: string | undefined;
+}) {
+  if (patientId) {
+    const { data, error } = await supabase
+      .from("DoctorPatients")
+      .select("Patient_Name")
+      .eq("id", patientId)
+      .single();
+
+    if (error) {
+      console.log("Error from getting patient: ", error.message);
+      throw new Error(error.message);
+    }
+
+    return data;
+  } else {
+    return null;
+  }
+}
+
 export async function checkIsPatient() {
   const { data: authData, error: authError } = await supabase.auth.getUser();
   if (authError) {

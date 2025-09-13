@@ -12,6 +12,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Krookypage from "./pages/Krookypage";
 import Helppage from "./pages/Helppage";
 import Predictpage from "./pages/Predictpage";
+import DoctorHistory from "./features/History/DoctorHistory";
 // import DoctorPredictpage from "./pages/DoctorPredictpage";
 
 const queryClient = new QueryClient({
@@ -40,7 +41,7 @@ function App() {
             <Route path="help" element={<Helppage />} />
             <Route path="predict" element={<Predictpage />} />
             <Route path="history" element={<Historypage />} />
-            <Route path="history/:patientId" element={<Historypage />} />
+            <Route path="history/:patientId" element={<DoctorHistory />} />
           </Route>
 
           <Route path="login" element={<LoginPage />} />

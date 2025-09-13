@@ -4,6 +4,7 @@ import usePredict from "../features/prediction/usePredict";
 import toast from "react-hot-toast";
 import useCheckIsPatient from "../features/patient/useCheckIsPatient";
 import Loader from "./Loader";
+import useGetSelectedPatient from "../features/History/useGetSelectedPatient";
 
 type Prediction = {
   id: number;
@@ -20,16 +21,26 @@ type PredictionFromCloud = {
   created_at: string;
 };
 
-function Predict({ history }: { history?: PredictionFromCloud[] }) {
+function Predict({
+  history,
+  selectedPatientId,
+}: {
+  history?: PredictionFromCloud[];
+  selectedPatientId?: string;
+}) {
   const { data: isPatient, isLoading: isCheckingIsPatient } =
     useCheckIsPatient();
   const { patientsData, isLoading: isGettingPatients } = useGetPatients();
+  const { data: selectedPatient, isLoading: isGettingSelectedPatient } =
+    useGetSelectedPatient(selectedPatientId);
   const { predict, isLoading: isPredicting } = usePredict();
   const [predictions, setPredictions] = useState<Prediction[]>([]);
   const [patientId, setPatientId] = useState<string | undefined>(undefined);
   const [image, setImage] = useState<File>();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const nextId = useRef<number>(0);
+
+  console.log("Selected patient by doctor: ", selectedPatient);
 
   useEffect(
     function () {
@@ -85,7 +96,28 @@ function Predict({ history }: { history?: PredictionFromCloud[] }) {
             },
           }
         );
-      } else if (patientId) {
+      } else if (image && selectedPatientId) {
+        predict(
+          { file: image, Dpatient_id: selectedPatientId },
+          {
+            onSuccess: (res) => {
+              setPatientId("");
+              setImage(undefined);
+              setPredictions((prevPredictions) => [
+                ...prevPredictions,
+                {
+                  id: nextId.current++,
+                  scanImage: res.scanimage_url,
+                  predictedClass: res.predicted_class,
+                  heatmapImage: res.heatmap_url,
+                },
+              ]);
+
+              if (fileInputRef.current) fileInputRef.current.value = "";
+            },
+          }
+        );
+      } else if (!patientId) {
         toast.error("Please select one of your patients");
       } else {
         toast.error("Please upload a scan to be predicted");
@@ -119,7 +151,8 @@ function Predict({ history }: { history?: PredictionFromCloud[] }) {
     }
   }
 
-  if (isGettingPatients || isCheckingIsPatient) return <Loader />;
+  if (isGettingPatients || isCheckingIsPatient || isGettingSelectedPatient)
+    return <Loader />;
 
   return (
     <div className="predict">
@@ -131,7 +164,7 @@ function Predict({ history }: { history?: PredictionFromCloud[] }) {
                 Please upload a scan to be classified
               </h1>
             )}
-            {!isPatient && (
+            {!isPatient && !selectedPatientId && (
               <div className="form__container">
                 <label htmlFor="patient" className="form__label">
                   Please choose the patient
@@ -152,6 +185,13 @@ function Predict({ history }: { history?: PredictionFromCloud[] }) {
                   ))}
                 </select>
               </div>
+            )}
+
+            {selectedPatientId && (
+              <h1 className="formContainer__title">
+                This is the history for{" "}
+                <span>{selectedPatient?.Patient_Name}</span>
+              </h1>
             )}
 
             <div className="form__container">

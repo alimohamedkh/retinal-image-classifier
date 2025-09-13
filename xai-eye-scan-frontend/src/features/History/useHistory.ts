@@ -1,10 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { getHistory } from "../../services/apiHistory";
 
-export default function useHistory(dpatient_id?: string) {
-  // const { userData } = useUser();
-  // const userId = userData?.user;
-
+export default function useHistory(dpatient_id: string | undefined) {
   const {
     isLoading,
     isError,
@@ -12,7 +9,6 @@ export default function useHistory(dpatient_id?: string) {
   } = useQuery({
     queryKey: ["history", dpatient_id],
     queryFn: () => getHistory({ dpatient_id }),
-    // enabled: !!userId,
   });
 
   return { isLoading, isError, history };

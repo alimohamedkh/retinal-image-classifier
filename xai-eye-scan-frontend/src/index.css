@@ -101,6 +101,13 @@ body {
   font-size: 1.9rem;
 }
 
+.formContainer__title span {
+  color: #ffffff;
+  font-weight: bold;
+  letter-spacing: 2px;
+  font-size: 2.3rem;
+}
+
 .form {
   display: flex;
   flex-direction: column;

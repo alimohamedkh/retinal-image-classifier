@@ -1,5 +1,5 @@
 import Loader from "../components/Loader";
-import DoctorHistory from "../features/History/DoctorHistory";
+import DoctorHistorySelect from "../features/History/DoctorHistorySelect";
 import PatientHistory from "../features/History/PatientHistory";
 import useCheckIsPatient from "../features/patient/useCheckIsPatient";
 
@@ -9,7 +9,7 @@ function Historypage() {
   if (isLoading) return <Loader />;
 
   if (isPatient === true) return <PatientHistory />;
-  return <DoctorHistory />;
+  return <DoctorHistorySelect />;
 }
 
 export default Historypage;

@@ -3,7 +3,7 @@ import Predict from "../../components/Predict";
 import useHistory from "./useHistory";
 
 function PatientHistory() {
-  const { history, isLoading } = useHistory();
+  const { history, isLoading } = useHistory(undefined);
   console.log("History: ", history);
 
   if (isLoading) return <Loader />;
