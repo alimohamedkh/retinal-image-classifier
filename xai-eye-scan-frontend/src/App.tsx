@@ -13,6 +13,7 @@ import Krookypage from "./pages/Krookypage";
 import Helppage from "./pages/Helppage";
 import Predictpage from "./pages/Predictpage";
 import DoctorHistory from "./features/History/DoctorHistory";
+import Profilepage from "./pages/Profilepage";
 // import DoctorPredictpage from "./pages/DoctorPredictpage";
 
 const queryClient = new QueryClient({
@@ -37,11 +38,12 @@ function App() {
           >
             <Route index element={<Navigate replace to="home" />} />
             <Route path="home" element={<Homepage />} />
-            <Route path="krooky" element={<Krookypage />} />
+            {/* <Route path="krooky" element={<Krookypage />} /> */}
             <Route path="help" element={<Helppage />} />
             <Route path="predict" element={<Predictpage />} />
             <Route path="history" element={<Historypage />} />
             <Route path="history/:patientId" element={<DoctorHistory />} />
+            <Route path="profile" element={<Profilepage />} />
           </Route>
 
           <Route path="login" element={<LoginPage />} />

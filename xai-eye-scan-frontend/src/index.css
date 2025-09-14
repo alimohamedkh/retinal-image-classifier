@@ -76,7 +76,6 @@ body {
   width: 90vw;
   max-width: 25rem;
   color: #eeeeee;
-  margin-top: -9rem;
   box-shadow: 0 20px 60px 10px rgba(0, 0, 0, 0.2),
     0 15px 20px -5px rgba(0, 0, 0, 0.22);
 }
@@ -193,6 +192,10 @@ body {
   transition: all ease-in-out 0.3s;
   letter-spacing: 1px;
   text-transform: capitalize;
+}
+
+.form__redirect {
+  width: max-content;
 }
 
 .form__submit {
@@ -387,7 +390,7 @@ body {
 .doctor__form {
   position: absolute;
   content: "";
-  top: 70%;
+  top: 19%;
   left: 50%;
   transform: translate(-50%, -50%);
   background-color: #393e46;

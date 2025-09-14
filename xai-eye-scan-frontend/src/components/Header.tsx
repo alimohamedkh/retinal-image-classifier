@@ -22,6 +22,12 @@ function Header({
     logout();
   }
 
+  function handleNavigateToProfile() {
+    navigate("/profile");
+  }
+
+  console.log("User details got: ", data);
+
   if (isLoading) return <Loader />;
 
   return (
@@ -33,15 +39,15 @@ function Header({
 
       <div className="header__profile">
         <img
-          src="/default-user.jpg"
+          src={data?.at(0).avatar ? data?.at(0).avatar : `/default-user.jpg`}
           alt="User image"
           className="header__profile--img"
         />
-        <h2 className="header__profile--name">Adham El Samahy</h2>
+        <h2 className="header__profile--name">{data?.at(0).full_name}</h2>
       </div>
 
       <div className="header__btns">
-        <CiUser className="header__btn" />
+        <CiUser className="header__btn" onClick={handleNavigateToProfile} />
         <CiLogout className="header__btn" onClick={handleLogout} />
         <CiHome className="header__btn" onClick={() => navigate("/home")} />
       </div>
