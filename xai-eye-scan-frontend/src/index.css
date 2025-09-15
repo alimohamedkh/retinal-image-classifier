@@ -263,6 +263,11 @@ body {
   justify-content: center;
   align-items: center;
   gap: 0.5rem;
+
+  @media (min-width: 48rem) {
+    margin-left: auto;
+    margin-right: 1.9rem;
+  }
 }
 
 .header__profile--img {
@@ -313,13 +318,24 @@ body {
   padding: 1rem 1.5rem;
   box-shadow: 0 20px 60px 10px rgba(0, 0, 0, 0.2),
     0 15px 20px -5px rgba(0, 0, 0, 0.22);
+
+  @media (min-width: 48rem) {
+    width: 25%;
+  }
 }
 
 .sidenav__menu {
-  width: 1.7rem;
-  height: 1.7rem;
   color: #eeeeee;
-  margin-right: auto;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0.5rem;
+  transition: all ease-in-out 0.2s;
+  cursor: pointer;
+  border-radius: 0.3rem;
+}
+
+.sidenav__menu:hover {
+  background-color: #353c47;
 }
 
 .sidenav__btns {
@@ -327,6 +343,11 @@ body {
   flex-direction: column;
   gap: 0.7rem;
   margin-top: 45%;
+
+  @media (min-width: 48rem) {
+    margin-top: 15%;
+    width: 75%;
+  }
 }
 
 .sidenav__btn {
@@ -342,6 +363,11 @@ body {
   letter-spacing: 1px;
   font-weight: 500;
   text-align: center;
+  transition: all ease-in-out 0.2s;
+}
+
+.sidenav__btn:hover {
+  background-color: #26c4cc;
 }
 
 .main {
@@ -521,6 +547,10 @@ body {
   border: 0.5px solid #222831;
   width: 100%;
   opacity: 0.3;
+
+  @media (min-width: 48rem) {
+    top: 102%;
+  }
 }
 
 .predict__scan,
