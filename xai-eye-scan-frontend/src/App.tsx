@@ -9,7 +9,6 @@ import Historypage from "./pages/Historypage";
 import LoginPage from "./pages/LoginPage";
 import Signuppage from "./pages/Signuppage";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import Krookypage from "./pages/Krookypage";
 import Helppage from "./pages/Helppage";
 import Predictpage from "./pages/Predictpage";
 import DoctorHistory from "./features/History/DoctorHistory";
@@ -38,7 +37,6 @@ function App() {
           >
             <Route index element={<Navigate replace to="home" />} />
             <Route path="home" element={<Homepage />} />
-            {/* <Route path="krooky" element={<Krookypage />} /> */}
             <Route path="help" element={<Helppage />} />
             <Route path="predict" element={<Predictpage />} />
             <Route path="history" element={<Historypage />} />

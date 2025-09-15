@@ -21,9 +21,16 @@ export default function useUpdateCurrentUser() {
     onSuccess: () => {
       toast.success("User account successfully updated");
       // Invalidate the user query to refetch fresh data
-      queryClient.invalidateQueries({ queryKey: ["user"] });
+      queryClient.invalidateQueries({ queryKey: ["user", "Details"] });
+    },
+
+    onError: (err) => {
+      toast.error(err.message);
+      console.log("Error Updating Current User: ", err.message);
     },
   });
 
   return { updateCurrentUser, isLoading };
 }
+
+// ((bucket_id = 'Images'::text) AND (lower((storage.foldername(name))[1]) = 'public'::text) AND (auth.role() = 'anon'::text))

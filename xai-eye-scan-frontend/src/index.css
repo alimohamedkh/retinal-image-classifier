@@ -650,3 +650,15 @@ body {
 .help__step span {
   font-style: italic;
 }
+
+.profile {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.profile__title {
+  font-family: "Tinos", serif;
+}

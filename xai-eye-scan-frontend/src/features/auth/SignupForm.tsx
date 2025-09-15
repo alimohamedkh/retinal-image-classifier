@@ -12,7 +12,7 @@ function SignupForm() {
   const { signup, isLoading } = useSignup();
   const navigate = useNavigate();
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>): void {
     e.preventDefault();
 
     if (password !== confirmPassword)

@@ -1,4 +1,5 @@
 import supabase, { supabaseUrl } from "./supabase";
+import heic2any from "heic2any";
 import type { User, UserAttributes } from "@supabase/supabase-js";
 
 export async function getUserDetails() {
@@ -47,7 +48,7 @@ export async function updateCurrentUser({
   const updateData: UserAttributes = {};
 
   if (password) updateData.password = password;
-  if (fullName) updateData.data = { fullName };
+  if (fullName) updateData.data = { full_name: fullName };
 
   let user: User | null = null;
 
@@ -75,18 +76,56 @@ export async function updateCurrentUser({
 
   if (!user) throw new Error("No user found to update avatar for.");
 
-  const fileName = `avatar-${user.id}-${Math.random()}`;
+  // const fileName = `avatar-${user.id}-${Math.random()}`;
+
+  let avatarFile = avatar; // Assuming 'avatar' is the File object
+
+  if (
+    avatarFile.type.toLowerCase() === "image/hiec" ||
+    avatarFile.name.endsWith(".heic") ||
+    avatarFile.name.endsWith(".HEIC")
+  ) {
+    try {
+      const convertedImage = await heic2any({
+        blob: avatarFile,
+        toType: "image/jpeg",
+        quality: 1,
+      });
+
+      const convertedBlob = Array.isArray(convertedImage)
+        ? convertedImage[0]
+        : convertedImage;
+
+      avatarFile = new File(
+        [convertedBlob],
+        avatarFile.name.replace(/\.[^/.]+$/, ".jpeg"),
+        {
+          type: "image/jpeg",
+        }
+      );
+    } catch (error) {
+      console.log("Error converting image type: ", error);
+      // throw new Error(error);
+    }
+  }
+  // 1. Extract the original file extension
+  const fileExt = avatarFile.name.split(".").pop();
+
+  // 2. Create the new, unique filename with the extension
+  const fileName = `avatar-${user.id}-${Math.random()}.${fileExt}`;
+
+  const filePath = `/avatars/${fileName}`;
 
   const { error: errorStorage } = await supabase.storage
-    .from("avatars")
-    .upload(fileName, avatar);
+    .from("Images")
+    .upload(filePath, avatarFile);
 
   if (errorStorage) throw new Error(errorStorage.message);
 
   const { data: updatedUser, error: finalError } =
     await supabase.auth.updateUser({
       data: {
-        avatar: `${supabaseUrl}/storage/v1/object/public/avatars/${fileName}}`,
+        avatar: `${supabaseUrl}/storage/v1/object/public/Images/avatars/${fileName}`,
       },
     });
 
