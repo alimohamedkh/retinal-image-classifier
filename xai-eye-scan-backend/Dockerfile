@@ -26,4 +26,4 @@ ENV PORT=8080
 EXPOSE 8080
 
 # Run from project root, importing Flask app at app/main.py -> app
-CMD ["gunicorn","-b", "0.0.0.0:8080","--workers", "1","--threads", "4","--timeout", "180","app.main:app"]
+CMD ["sh","-c","gunicorn --bind 0.0.0.0:${PORT:-8080} --workers 1 --threads 4 --timeout 180 app.main:app"]

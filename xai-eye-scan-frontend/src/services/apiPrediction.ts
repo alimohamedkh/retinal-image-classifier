@@ -28,9 +28,12 @@ export async function predict({
   formData.append("file", file); // 'file' is the key the server will use to find the file
   if (Dpatient_id) formData.append("Dpatient_id", Dpatient_id);
 
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 1_200_000);
+
   try {
     // 4. Send the POST request with the JWT and the file
-    const response = await fetch("http://localhost:8080/predict", {
+    const response = await fetch("https://retinal-image-classifier-1-91649958980.europe-west1.run.app/predict", {
       // Adjusted URL
       method: "POST",
       headers: {
@@ -39,7 +42,10 @@ export async function predict({
       },
       // The body of the request is the FormData object
       body: formData,
+      signal: controller.signal,
     });
+
+    clearTimeout(timeoutId);
 
     if (!response.ok) {
       const errorBody = await response.text();
